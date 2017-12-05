@@ -1,0 +1,13 @@
+body { 
+  background-color: #ddd;
+  font-family: sans-serif; 
+  color: #444;
+}
+
+h1 { 
+  color: #000;
+}
+li { padding-top: 4px; }
+li form { display: inline; }
+li input { border-radius: 5px; }
+.validation { color: red; }

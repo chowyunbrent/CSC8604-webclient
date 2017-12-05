@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket Test</title>
+    </head>
+    <body>
+        <p id="status">...</p>
+        <button onclick="socket.send('hello');">Send</button>
+    </body>
+</html>
+<script>
+	var socket = new WebSocket("ws://localhost:3000/ws");
+	socket.onmessage = function(event) {
+		document.getElementById("status").innerHTML = "Received: " + event.data;
+	};
+
+</script>

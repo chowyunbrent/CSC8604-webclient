@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shopping</title>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  
+  <body>
+    <h1>Shopping List</h1>
+    <ul>
+    <% for (item of shopping) { %>
+        <li>
+			<%= item %>
+			<form method="POST" action="/list/remove" onsubmit="return removeSubmitted('<%= item %>');">
+			<input type="hidden" name="item" value="<%= item %>" />
+			<input type="Submit" value="X" title="Remove" />
+		  </form>
+		</li>
+
+    <% } %>
+    </ul>
+	<form method="POST" action="/list/add" onsubmit="return addSubmitted();">
+		<label>Add: <input type="text" name="item" id="addItem"/></label>
+		<input type="Submit" value="Add" />
+		<span id="addMessage" class="validation"></span>
+	</form>
+  </body>
+</html>
+
+<script>
+	document.getElementById("addItem").focus();
+	
+	function removeSubmitted(item) {
+	  request("/list/remove", {"item": item});
+	  return false;   // prevent form submission
+	}
+
+	function addSubmitted() {
+	  var item = document.getElementById("addItem").value;
+	  request("/list/add", {"item": item});
+	  return false;   // prevent form submission
+	}
+
+	function request(url, data) {
+	  var xhr = new XMLHttpRequest();
+	  xhr.onreadystatechange = function() {
+		if (xhr.readyState == xhr.DONE && xhr.status == 200) {
+		  var response = JSON.parse(xhr.responseText);
+		  refreshList(response.shopping);
+		}
+	  };
+	  xhr.open("POST", url, true);
+	  xhr.setRequestHeader("Accept", "application/json");
+	  xhr.setRequestHeader("Content-Type", "application/json");
+	  xhr.send(JSON.stringify(data));
+	}
+
+	function refreshList(shopping) {
+		var html = "";
+		for (item of shopping) {
+		  html += listItemHtml(item);
+		}
+		document.querySelector("ul").innerHTML = html;
+	}
+
+	function listItemHtml(item) {
+	  var template = '<li>$ITEM <a href="#" onclick="removeSubmitted(\'$ITEM\')">x</a></li>';
+	  return template.split("$ITEM").join(item);  // replace all (WARNING: not escaping = not safe)
+	}
+
+
+
+</script>
+
+

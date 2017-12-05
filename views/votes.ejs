@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Voter</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Votes</h1>
+    <% for (i = 0; i < votes.length; i++) { %>
+    <div class="option" id="option<%=i%>">
+      <button onclick="vote(<%= i %>);" ><%= labels[i] %></button>
+      <span><%= votes[i] %></span>
+    </div>
+    <% } %>
+  </body>
+</html>
+
+<script>
+function vote(option) {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == xhr.DONE && xhr.status == 200) {
+      document.querySelector("#option" + option + " span").innerHTML = xhr.responseText;
+    }
+  };
+  xhr.open("POST", "/vote/" + option, true);
+  xhr.send();
+}
+</script>
